@@ -20,11 +20,9 @@ app.use(function (req, res, next) {
   next();
 });
 
-const io = require("socket.io")(process.env.PORT, {
-  cors: {
-    origin: ["http://localhost:3000", "https://socketsmpl.herokuapp.com/"],
-  },
-});
+var server = require("http").Server(app);
+
+const io = require("socket.io")(server);
 
 class SocketConnection {
   constructor(io, socket) {
