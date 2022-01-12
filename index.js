@@ -21,6 +21,10 @@ server.listen(process.env.PORT, () => {
 const io = require("socket.io")(server, {
   cors: {
     origin: "*",
+    methods: ["GET", "POST"],
+    allowedHeaders: ["content-type"],
+    pingTimeout: 7000,
+    pingInterval: 3000,
   },
 });
 
