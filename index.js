@@ -4,7 +4,7 @@ dotenv.config();
 
 const io = require("socket.io")(process.env.PORT, {
   cors: {
-    origin: ["http://localhost:3000"],
+    origin: ["http://localhost:3000", "https://socketsmpl.herokuapp.com/"],
   },
 });
 
