@@ -65,8 +65,17 @@ class SocketConnection {
       console.log(`connect_error due to ${err.message}`);
     });
     socket.on("disconnect", (reason) => this.Disconnect(reason));
-    app.get("/", (req, res) => {
-      res.send({ message: "hi" });
+    app.get("/", async (req, res) => {
+      const usersMessages = await this.client
+        .db("chatbot")
+        .collection("usersMessages")
+        .find({})
+        .toArray();
+      if (usersMessages) {
+        res.send({ usersMessages });
+        return;
+      }
+      res.status(404).send({ message: "Data not found" });
     });
   }
 
