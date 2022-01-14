@@ -111,11 +111,15 @@ class SocketConnection {
   }
 
   async SendMessage(message) {
-    console.log("inside send", message, this.GetBotAnswer(message));
-    this.socket.broadcast.emit("toClients", message, this.socket.id);
+    //this.socket.broadcast.emit("toClients", message, this.socket.id);
     const botAnswer = this.GetBotAnswer(message);
-    this.socket.emit("toClients", botAnswer, "Bot");
-    this.socket.broadcast.emit("toClients", botAnswer, "Bot");
+    console.log("inside send", message, botAnswer);
+    this.io.sockets.emit(
+      "toClients",
+      { message: message, senderId: this.socket.id },
+      { message: botAnswer, senderId: "Bot" }
+    );
+    //this.socket.broadcast.emit("toClients", botAnswer, "Bot");
     const response = await this.client
       .db("chatbot")
       .collection("usersMessages")
@@ -142,6 +146,7 @@ async function createMongoConnection() {
   await client.connect(() => {
     console.log("Mongodb connected");
     io.on("connection", (socket) => {
+      console.log("Id connected", socket.id);
       new SocketConnection(io, socket, client, app);
     });
   });
